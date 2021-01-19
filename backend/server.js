@@ -2,26 +2,23 @@ const express = require("express");
 const dotenv = require("dotenv");
 const colors = require("colors");
 
-const products = require("./data/products");
 const connectDB = require("./config/db");
+const productRoutes = require("./routes/productRoutes");
+const { errorHandler, notFound } = require("./middleware/errorMiddleware");
 
 const app = express();
 dotenv.config();
-
 connectDB();
 
 app.get("/", (req, res) => {
   res.send("API is running!");
 });
 
-app.get("/api/products", (req, res) => {
-  res.status(200).json(products);
-});
+app.use("/api/products", productRoutes);
 
-app.get("/api/products/:id", (req, res) => {
-  const product = products.find((p) => p._id === req.params.id);
-  res.status(200).json(product);
-});
+app.use(notFound);
+
+app.use(errorHandler);
 
 const port = process.env.PORT || 5000;
 
