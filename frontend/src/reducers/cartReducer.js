@@ -1,11 +1,9 @@
-import { CART_ADD_ITEM } from "../constants/cartConstants";
+import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
 
 export const cartReducer = (state = { cartItems: [] }, actions) => {
   switch (actions.type) {
     case CART_ADD_ITEM:
-      console.log("ping 123");
       const item = actions.payload;
-      console.log(item);
       const existItem = state.cartItems.find((x) => x.product === item.product);
       if (existItem) {
         return {
@@ -20,6 +18,12 @@ export const cartReducer = (state = { cartItems: [] }, actions) => {
           cartItems: [...state.cartItems, item],
         };
       }
+
+    case CART_REMOVE_ITEM:
+      return {
+        ...state,
+        cartItems: state.cartItems.filter((x) => x.product !== actions.payload),
+      };
     default:
       return state;
   }
