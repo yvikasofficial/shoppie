@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Button, Col, Form, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { getUserDetails } from "../actions/userActions";
+import { getUserDetails, updateUserProfile } from "../actions/userActions";
 import Message from "../components/message";
 import Loader from "../components/loader";
 
@@ -14,7 +13,7 @@ const ProfileScreen = ({ location, history }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [message, setMessag] = useState(null);
 
-  const redirect = location.search ? location.search.split("=")[1] : "/";
+  // const redirect = location.search ? location.search.split("=")[1] : "/";
   const dispatch = useDispatch();
 
   const userDetails = useSelector((state) => state.userDetails);
@@ -23,6 +22,9 @@ const ProfileScreen = ({ location, history }) => {
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
 
+  const userUpdateProflie = useSelector((state) => state.userUpdateProflie);
+  const { success } = userUpdateProflie;
+
   const submitHadler = (e) => {
     e.preventDefault();
 
@@ -30,7 +32,7 @@ const ProfileScreen = ({ location, history }) => {
       setMessag("Passwords do not match!");
     } else {
       setMessag(null);
-      //   dispatch(register(name, email, password));
+      dispatch(updateUserProfile({ name, email, password }));
     }
   };
 
@@ -53,6 +55,9 @@ const ProfileScreen = ({ location, history }) => {
         <h2 className="my-3">User Profile</h2>
         {message && <Message variant="danger">{message}</Message>}
         {error && <Message variant="danger">{error}</Message>}
+        {success && (
+          <Message variant="success">Profile updated successfully!</Message>
+        )}
         {loading && <Loader />}
         <Form onSubmit={submitHadler}>
           {/* NAME */}
