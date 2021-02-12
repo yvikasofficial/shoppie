@@ -79,7 +79,7 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
   }
 };
 
-export const getOrder = (orderId, paymentResult) => async (
+export const payOrder = (orderId, paymentResult) => async (
   dispatch,
   getState
 ) => {
@@ -94,17 +94,16 @@ export const getOrder = (orderId, paymentResult) => async (
 
     const config = {
       headers: {
-        ContentType: "application/josn",
+        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    const { data } = await axios.get(
-      `/api/orders/${orderId}`,
+    const { data } = await axios.put(
+      `/api/orders/${orderId}/pay`,
       paymentResult,
       config
     );
-    console.log(data);
 
     dispatch({
       type: ORDER_PAY_SUCCESS,
